@@ -18,4 +18,4 @@ jobs:
     - name: Deploy with Maven
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn deploy -B --file pom.xml -Dregistry=https://maven.pkg.github.com/Neppord -Dtoken=$GH_TOKEN
+      run: mvn deploy -B --file pom.xml -Dusername=$GITHUB_ACTOR -Dregistry=https://maven.pkg.github.com/Neppord -Dtoken=$GH_TOKEN
