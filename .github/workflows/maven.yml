@@ -17,5 +17,5 @@ jobs:
       run: mvn package -B --file pom.xml
     - name: Deploy with Maven
       env:
-        token: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn deploy -B --file pom.xml
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: mvn deploy -B --file pom.xml -Dtoken=$GH_TOKEN
