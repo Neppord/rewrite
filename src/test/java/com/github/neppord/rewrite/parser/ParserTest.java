@@ -13,4 +13,9 @@ class ParserTest {
             () -> Parser.whitespace.parse("v ")
         );
     }
+    @Test
+    public void parenthesis() throws ParseException {
+        assertEquals("(", Parser.leftParenthesis.parse("(").value);
+        assertEquals(")", Parser.rightParenthesis.parse(")").value);
+    }
 }

@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 public interface Parser<V> {
     Parser<CharSequence> whitespace = regexp("\\s+");
+    Parser<CharSequence> leftParenthesis = regexp("\\(");
+    Parser<CharSequence> rightParenthesis = regexp("\\)");
 
     Result<V> parse(CharSequence c) throws ParseException;
     static Parser<CharSequence> regexp(String re) {
