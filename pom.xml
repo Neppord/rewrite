@@ -6,7 +6,7 @@
 
     <groupId>com.github.neppord</groupId>
     <artifactId>rewrite</artifactId>
-    <version>0.0.0</version>
+    <version>0.0.10</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -50,9 +50,8 @@
     <distributionManagement>
         <repository>
             <id>github</id>
-            <name>GitHub Neppord Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/Neppord/rewrite</url>
+            <name>GitHub neppord Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/neppord/rewrite</url>
         </repository>
     </distributionManagement>
-
 </project>

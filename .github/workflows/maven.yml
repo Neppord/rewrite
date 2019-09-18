@@ -17,5 +17,7 @@ jobs:
       run: mvn package -B --file pom.xml
     - name: Deploy with Maven
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: mvn deploy -B --file pom.xml -Dusername=$GITHUB_ACTOR -Dregistry=https://maven.pkg.github.com/Neppord -Dtoken=$GH_TOKEN
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cp .github/settings.xml $HOME/.m2/settings.xml
+        mvn deploy -B --file pom.xml
