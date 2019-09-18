@@ -1,6 +1,7 @@
 package com.github.neppord.rewrite.parser;
 
 
+import java.util.function.Function;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,5 +27,9 @@ public interface Parser<V> {
             CharSequence rest = c.subSequence(end, c.length());
             return new Result<CharSequence>(value, rest);
         };
+    }
+
+    default <U> Parser<U> map(Function<V,U> f) {
+        return c -> this.parse(c).map(f);
     }
 }
