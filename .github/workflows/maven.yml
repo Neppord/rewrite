@@ -20,5 +20,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         cp .github/settings.xml $M2_HOME/conf/settings.xml
-        mvn help:effective-settings
+        mvn -B help:effective-settings
         mvn deploy -B --file pom.xml
