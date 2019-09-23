@@ -13,6 +13,19 @@ public interface Parser<V> {
     Parser<CharSequence> leftBracket = regexp("\\[");
     Parser<CharSequence> rightBracket = regexp("\\]");
 
+    static Parser<CharSequence> literal(CharSequence word) {
+        return c -> {
+            if (word.length() <= c.length() && c.subSequence(0, word.length()).equals(word)) {
+                return new Result<>(word, c.subSequence(word.length(), c.length()));
+            } else {
+                int lookahead = Math.min(c.length(), word.length());
+                CharSequence found = c.subSequence(0, lookahead);
+                final String message = "Expected '" + word +"' found '" + found + "'";
+                throw new ParseException(message);
+            }
+        };
+    }
+
     Result<V> parse(CharSequence c) throws ParseException;
     static Parser<CharSequence> regexp(String re) {
         Pattern p = Pattern.compile("^" + re);
