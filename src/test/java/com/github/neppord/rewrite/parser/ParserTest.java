@@ -72,4 +72,15 @@ class ParserTest {
             );
         assertEquals(3 , subtraction.parse("4-1").value);
     }
+
+    @Test
+    void rewrite() throws ParseException {
+        String input = "{\"seed\": \"as23}sdkdf\"}";
+        String expected = "{\"seed\": \"sable1234\" }";
+        Parser<CharSequence> transformation = Parser.rewrite(
+            "{\"seed\": ${{seed}} }",
+            expected
+            );
+        assertEquals(expected, transformation.parse(input).value);
+    }
 }

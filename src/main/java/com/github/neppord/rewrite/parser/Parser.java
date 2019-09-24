@@ -30,6 +30,10 @@ public interface Parser<V> {
         return c -> new Result<>(value, c);
     }
 
+    static Parser<CharSequence> rewrite(CharSequence readTemplate, CharSequence writeTemplate) {
+        return c -> new Result<>(writeTemplate, "");
+    }
+
     Result<V> parse(CharSequence c) throws ParseException;
     static Parser<CharSequence> regexp(String re) {
         Pattern p = Pattern.compile("^" + re);
