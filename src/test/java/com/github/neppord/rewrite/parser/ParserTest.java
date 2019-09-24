@@ -34,7 +34,12 @@ class ParserTest {
 
         Parser<CharSequence> phraseParser = Parser.literal("phrase");
         assertEquals("phrase", phraseParser.parse("phrase").value);
+    }
 
-
+    @Test
+    void or() throws ParseException {
+        Parser<CharSequence> parser = Parser.whitespace.or(Parser.rightParenthesis);
+        assertEquals(" ", parser.parse(" ").value);
+        assertEquals(")", parser.parse(")").value);
     }
 }

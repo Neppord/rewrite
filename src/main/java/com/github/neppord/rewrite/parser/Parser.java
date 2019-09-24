@@ -49,4 +49,15 @@ public interface Parser<V> {
     default <U> Parser<U> map(Function<V,U> f) {
         return c -> this.parse(c).map(f);
     }
+
+    default Parser<V> or(Parser<V> alternative) {
+        return c -> {
+            try {
+                return parse(c);
+            } catch (ParseException e) {
+                return alternative.parse(c);
+            }
+        };
+    }
+
 }
