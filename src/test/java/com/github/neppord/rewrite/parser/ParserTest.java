@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.function.Function;
 
 import static com.github.neppord.rewrite.parser.Parser.regexp;
+import static com.github.neppord.rewrite.parser.Parser.variable;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
@@ -74,6 +75,11 @@ class ParserTest {
     }
 
     @Test
+    void variable() throws ParseException {
+        assertEquals("${{seed}}", variable.parse("${{seed}}").value);
+    }
+
+    @Test
     void rewrite() throws ParseException {
         String input = "{\"seed\": \"as23}sdkdf\"}";
         String expected = "{\"seed\": \"sable1234\" }";
@@ -82,5 +88,6 @@ class ParserTest {
             expected
             );
         assertEquals(expected, transformation.parse(input).value);
+        // assertEquals(" " + expected, transformation.parse(" " + input).value);
     }
 }

@@ -12,6 +12,7 @@ public interface Parser<V> {
     Parser<CharSequence> rightParenthesis = regexp("\\)");
     Parser<CharSequence> leftBracket = regexp("\\[");
     Parser<CharSequence> rightBracket = regexp("\\]");
+    Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}");
 
     static Parser<CharSequence> literal(CharSequence word) {
         return c -> {
