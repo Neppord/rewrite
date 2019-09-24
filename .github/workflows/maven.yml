@@ -15,10 +15,3 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn package -B --file pom.xml
-    - name: Deploy with Maven
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        cp .github/settings.xml $M2_HOME/conf/settings.xml
-        mvn -B help:effective-settings
-        mvn deploy -B --file pom.xml
