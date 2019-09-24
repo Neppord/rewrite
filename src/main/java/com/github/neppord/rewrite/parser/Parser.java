@@ -42,7 +42,7 @@ public interface Parser<V> {
             final int end = result.end();
             CharSequence value = c.subSequence(start, end);
             CharSequence rest = c.subSequence(end, c.length());
-            return new Result<CharSequence>(value, rest);
+            return new Result<>(value, rest);
         };
     }
 
