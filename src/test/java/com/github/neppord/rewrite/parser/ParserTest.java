@@ -42,4 +42,10 @@ class ParserTest {
         assertEquals(" ", parser.parse(" ").value);
         assertEquals(")", parser.parse(")").value);
     }
+
+    @Test
+    void value() throws ParseException {
+        Parser<CharSequence> parser = Parser.value("word");
+        assertEquals("word", parser.parse(" ").value);
+    }
 }

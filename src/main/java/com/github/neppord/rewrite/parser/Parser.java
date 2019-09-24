@@ -26,6 +26,10 @@ public interface Parser<V> {
         };
     }
 
+    static <U >Parser<U> value(U value) {
+        return c -> new Result<>(value, c);
+    }
+
     Result<V> parse(CharSequence c) throws ParseException;
     static Parser<CharSequence> regexp(String re) {
         Pattern p = Pattern.compile("^" + re);
