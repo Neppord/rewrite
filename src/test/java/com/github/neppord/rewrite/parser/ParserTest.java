@@ -2,6 +2,9 @@ package com.github.neppord.rewrite.parser;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Function;
+
+import static com.github.neppord.rewrite.parser.Parser.regexp;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
@@ -47,5 +50,26 @@ class ParserTest {
     void value() throws ParseException {
         Parser<CharSequence> parser = Parser.value("word");
         assertEquals("word", parser.parse(" ").value);
+    }
+
+    @Test
+    void apply() throws ParseException {
+        Parser<Function<Integer, Integer>> addOne = Parser.value(x -> x +1);
+        Parser<Integer> one = Parser.value(1);
+        assertEquals(2, one.apply(addOne).parse("").value);
+
+        Parser<Integer> number = regexp("\\d")
+            .map(CharSequence::toString)
+            .map(Integer::parseInt);
+        Parser<CharSequence> operator = Parser.literal("-");
+        Parser<Integer> subtraction =
+            number.apply(
+                operator.apply(
+                    number.apply(
+                        Parser.value(x -> minus -> y -> x - y)
+                    )
+                )
+            );
+        assertEquals(3 , subtraction.parse("4-1").value);
     }
 }
