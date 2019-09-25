@@ -2,10 +2,12 @@ package com.github.neppord.rewrite.parser;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.function.Function;
 
 import static com.github.neppord.rewrite.parser.Parser.regexp;
 import static com.github.neppord.rewrite.parser.Parser.variable;
+import static java.util.Collections.EMPTY_MAP;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
@@ -77,6 +79,12 @@ class ParserTest {
     @Test
     void variable() throws ParseException {
         assertEquals("${{seed}}", variable.parse("${{seed}}").value);
+    }
+
+    @Test
+    void templateWithNoVariables() throws ParseException {
+        Parser<CharSequence> template = Parser.template(EMPTY_MAP);
+        assertEquals("hello world", template.parse("hello world").value);
     }
 
     @Test

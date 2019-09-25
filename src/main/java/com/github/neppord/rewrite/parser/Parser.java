@@ -1,6 +1,7 @@
 package com.github.neppord.rewrite.parser;
 
 
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -33,6 +34,10 @@ public interface Parser<V> {
 
     static Parser<CharSequence> rewrite(CharSequence readTemplate, CharSequence writeTemplate) {
         return c -> new Result<>(writeTemplate, "");
+    }
+
+    static Parser<CharSequence> template(Map<CharSequence, CharSequence> variables) {
+        return c -> new Result<>(c, "");
     }
 
     Result<V> parse(CharSequence c) throws ParseException;
