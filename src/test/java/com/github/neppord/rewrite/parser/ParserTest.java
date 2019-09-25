@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.function.Function;
 
-import static com.github.neppord.rewrite.parser.Parser.regexp;
-import static com.github.neppord.rewrite.parser.Parser.variable;
+import static com.github.neppord.rewrite.parser.Parser.*;
 import static java.util.Collections.EMPTY_MAP;
+import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ParserTest {
@@ -83,8 +83,11 @@ class ParserTest {
 
     @Test
     void templateWithNoVariables() throws ParseException {
-        Parser<CharSequence> template = Parser.template(EMPTY_MAP);
-        assertEquals("hello world", template.parse("hello world").value);
+        assertEquals("hello world", template(EMPTY_MAP).parse("hello world").value);
+        assertEquals(
+            "hello world",
+            template(singletonMap("subject", "world")).parse("hello ${{subject}}").value
+        );
     }
 
     @Test
