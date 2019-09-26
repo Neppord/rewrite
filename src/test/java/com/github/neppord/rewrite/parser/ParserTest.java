@@ -2,6 +2,7 @@ package com.github.neppord.rewrite.parser;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.function.Function;
 
 import static com.github.neppord.rewrite.parser.Parser.regexp;
@@ -89,6 +90,12 @@ class ParserTest {
             "hello world",
             Parser.writeTemplate.parse("hello ${{subject}}").value.apply(singletonMap("subject", "world"))
         );
+    }
+
+    @Test
+    void readTemplate() throws ParseException {
+        final Parser<Map<String, String>> hello_world = Parser.readTemplate.parse("hello world").value;
+        assertEquals(EMPTY_MAP, hello_world.parse("hello world").value);
     }
 
     @Test

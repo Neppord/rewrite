@@ -7,6 +7,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Collections.EMPTY_MAP;
+
 public interface Parser<V> {
     Parser<CharSequence> whitespace = regexp("\\s+");
     Parser<CharSequence> leftParenthesis = regexp("\\(");
@@ -14,6 +16,8 @@ public interface Parser<V> {
     Parser<CharSequence> leftBracket = regexp("\\[");
     Parser<CharSequence> rightBracket = regexp("\\]");
     Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}");
+    Parser<Parser<Map<String, String>>> readTemplate =
+        c -> new Result<>(value(EMPTY_MAP), c);
 
     static Parser<CharSequence> literal(CharSequence word) {
         return c -> {
