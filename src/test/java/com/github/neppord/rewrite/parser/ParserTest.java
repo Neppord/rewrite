@@ -2,13 +2,14 @@ package com.github.neppord.rewrite.parser;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.function.Function;
 
-import static com.github.neppord.rewrite.parser.Parser.*;
+import static com.github.neppord.rewrite.parser.Parser.regexp;
+import static com.github.neppord.rewrite.parser.Parser.variable;
 import static java.util.Collections.EMPTY_MAP;
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParserTest {
     @Test
