@@ -45,6 +45,19 @@ class ParserTest {
     }
 
     @Test
+    void many() throws ParseException {
+        final Parser<Integer> number = regexp("\\d")
+            .map(CharSequence::toString)
+            .map(Integer::parseInt);
+        final Parser<Integer> positiveNumber = regexp("\\+\\d")
+            .map(CharSequence::toString)
+            .map(Integer::parseInt);
+        final Parser<Integer> rest = Parser.many((Integer x) -> (Integer y) -> x + y, positiveNumber);
+        final Parser<Integer> expr = rest.apply(number.map(x -> y -> x + y));
+        assertEquals(10, expr.parse("1+2+3+4").value);
+    }
+
+    @Test
     void or() throws ParseException {
         Parser<CharSequence> parser = Parser.whitespace.or(Parser.rightParenthesis);
         assertEquals(" ", parser.parse(" ").value);
@@ -97,7 +110,7 @@ class ParserTest {
         final Parser<Map<String, String>> hello_world = Parser.readTemplate.parse("hello world").value;
         assertEquals(EMPTY_MAP, hello_world.parse("hello world").value);
         // final Parser<Map<String, String>> hello = Parser.readTemplate.parse("hello ${{subject}}").value;
-        // assertEquals(singletonMap("subject", "world"), hello_world.parse("hello world").value);
+        // assertEquals(singletonMap("subject", "world"), hello.parse("hello world").value);
     }
 
     @Test

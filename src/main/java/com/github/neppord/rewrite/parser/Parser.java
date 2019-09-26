@@ -1,6 +1,7 @@
 package com.github.neppord.rewrite.parser;
 
 
+import java.util.EmptyStackException;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
@@ -8,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.EMPTY_MAP;
+import static java.util.Collections.singletonMap;
 
 public interface Parser<V> {
     Parser<CharSequence> whitespace = regexp("\\s+");
@@ -17,9 +19,29 @@ public interface Parser<V> {
     Parser<CharSequence> rightBracket = regexp("\\]");
     Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}")
         .map(v -> v.subSequence(3, v.length() - 2));
+    Parser<CharSequence> anything = regexp(".");
     Parser<Parser<Map<String, String>>> readTemplate =
         c -> new Result<>(value(EMPTY_MAP), c);
-    Parser<CharSequence> anything = regexp(".");
+
+        /*
+    Parser<Parser<Map<String, String>>> readTemplate =
+        many(
+            (Map<String, String> m1) -> (Map<String, String> m2) -> m1.isEmpty() ? m2 : m1 ,
+            variable.map(key -> literal("word").map(value -> singletonMap(key, value))).or(
+                anything.map(s -> literal(s).map(s2 -> EMPTY_MAP))
+            )
+        );
+*/
+
+    static <U> Parser<U> many(Function<U, Function<U, U>> f, Parser<U> parser) {
+        return c -> {
+             try {
+                 return many(f, parser).apply(parser.map(f)).parse(c);
+             } catch (ParseException e) {
+                 return parser.parse(c);
+             }
+        };
+    }
 
     static Parser<CharSequence> literal(CharSequence word) {
         return c -> {
