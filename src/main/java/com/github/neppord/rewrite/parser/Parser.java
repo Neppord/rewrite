@@ -15,7 +15,8 @@ public interface Parser<V> {
     Parser<CharSequence> rightParenthesis = regexp("\\)");
     Parser<CharSequence> leftBracket = regexp("\\[");
     Parser<CharSequence> rightBracket = regexp("\\]");
-    Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}");
+    Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}")
+        .map(v -> v.subSequence(3, v.length() - 2));
     Parser<Parser<Map<String, String>>> readTemplate =
         c -> new Result<>(value(EMPTY_MAP), c);
 
@@ -50,8 +51,7 @@ public interface Parser<V> {
 
     static Parser<String> makeWriteTemplate(Map<String, String> variables) {
         final Parser<CharSequence> templateVariable =
-            variable.map(v -> v.subSequence(3, v.length() - 2))
-            .map(CharSequence::toString);
+            variable.map(CharSequence::toString);
         final Parser<String> anything = regexp(".").map(CharSequence::toString);
         final Parser<String> variableOrAnything = templateVariable.map(variables::get).or(anything);
         return c -> {
