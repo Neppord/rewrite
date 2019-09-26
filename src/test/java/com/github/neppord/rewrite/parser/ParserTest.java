@@ -83,11 +83,11 @@ class ParserTest {
     }
 
     @Test
-    void templateWithNoVariables() throws ParseException {
-        assertEquals("hello world", Parser.template.parse("hello world").value.apply(EMPTY_MAP));
+    void writeTemplateWithNoVariables() throws ParseException {
+        assertEquals("hello world", Parser.writeTemplate.parse("hello world").value.apply(EMPTY_MAP));
         assertEquals(
             "hello world",
-            Parser.template.parse("hello ${{subject}}").value.apply(singletonMap("subject", "world"))
+            Parser.writeTemplate.parse("hello ${{subject}}").value.apply(singletonMap("subject", "world"))
         );
     }
 
