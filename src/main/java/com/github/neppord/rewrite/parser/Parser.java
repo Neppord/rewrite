@@ -19,6 +19,7 @@ public interface Parser<V> {
         .map(v -> v.subSequence(3, v.length() - 2));
     Parser<Parser<Map<String, String>>> readTemplate =
         c -> new Result<>(value(EMPTY_MAP), c);
+    Parser<CharSequence> anything = regexp(".");
 
     static Parser<CharSequence> literal(CharSequence word) {
         return c -> {
@@ -52,7 +53,7 @@ public interface Parser<V> {
     static Parser<String> makeWriteTemplate(Map<String, String> variables) {
         final Parser<CharSequence> templateVariable =
             variable.map(CharSequence::toString);
-        final Parser<String> anything = regexp(".").map(CharSequence::toString);
+        final Parser<String> anything = Parser.anything.map(CharSequence::toString);
         final Parser<String> variableOrAnything = templateVariable.map(variables::get).or(anything);
         return c -> {
             try {
