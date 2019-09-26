@@ -36,7 +36,15 @@ public interface Parser<V> {
         return c -> new Result<>(writeTemplate, "");
     }
 
-    static Parser<String> template(Map<String, String> variables) {
+    Parser<Function<Map<String, String>, String>> template = c -> new Result<>(m -> {
+        try {
+            return oldTemplate(m).parse(c).value;
+        } catch (ParseException e) {
+            throw new RuntimeException(e.message);
+        }
+    }, "");
+
+    static Parser<String> oldTemplate(Map<String, String> variables) {
         final Parser<CharSequence> templateVariable =
             variable.map(v -> v.subSequence(3, v.length() - 2))
             .map(CharSequence::toString);
@@ -45,7 +53,7 @@ public interface Parser<V> {
         return c -> {
             try {
                 final Parser<String> concat =
-                    template(variables)
+                    oldTemplate(variables)
                         .apply(variableOrAnything
                             .apply(value(s -> s2 -> s + s2)));
                 return concat.parse(c);
@@ -53,7 +61,6 @@ public interface Parser<V> {
                 return variableOrAnything.parse(c);
             }
         };
-
     }
 
     Result<V> parse(CharSequence c) throws ParseException;
