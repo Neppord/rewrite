@@ -83,7 +83,7 @@ class ParserTest {
     }
 
     @Test
-    void writeTemplateWithNoVariables() throws ParseException {
+    void writeTemplate() throws ParseException {
         assertEquals("hello world", Parser.writeTemplate.parse("hello world").value.apply(EMPTY_MAP));
         assertEquals(
             "hello world",
