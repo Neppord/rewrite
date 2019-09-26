@@ -109,8 +109,8 @@ class ParserTest {
     void readTemplate() throws ParseException {
         final Parser<Map<String, String>> hello_world = Parser.readTemplate.parse("hello world").value;
         assertEquals(EMPTY_MAP, hello_world.parse("hello world").value);
-        // final Parser<Map<String, String>> hello = Parser.readTemplate.parse("hello ${{subject}}").value;
-        // assertEquals(singletonMap("subject", "world"), hello.parse("hello world").value);
+        final Parser<Map<String, String>> hello = Parser.readTemplate.parse("hello ${{subject}}").value;
+        assertEquals(singletonMap("subject", "world"), hello.parse("hello world").value);
     }
 
     @Test
