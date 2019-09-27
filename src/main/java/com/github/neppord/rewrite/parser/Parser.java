@@ -35,14 +35,18 @@ public interface Parser<V> {
 
     Parser<Parser<Map<String, String>>> readTemplate =
         many(
-            p1 -> p2 -> p2.apply(p1.map(m1 -> m2 -> {
-                HashMap<String, String> ret = new HashMap<>();
-                ret.putAll(m1);
-                ret.putAll(m2);
-                return ret;
-            })),
+            p1 -> p2 -> p2.apply(p1.map(Parser::mergeMaps)),
             readVariable.or(readLiteral)
         );
+
+    static Function<Map<String, String>, Map<String, String>> mergeMaps(Map<String, String> m1) {
+        return m2 -> {
+            HashMap<String, String> ret = new HashMap<>();
+            ret.putAll(m1);
+            ret.putAll(m2);
+            return ret;
+        };
+    }
 
     static <U> Parser<U> many(Function<U, Function<U, U>> f, Parser<U> parser) {
         return c -> {
