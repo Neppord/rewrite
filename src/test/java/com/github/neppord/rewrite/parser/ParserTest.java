@@ -33,8 +33,8 @@ class ParserTest {
     public void literal() throws ParseException {
         final Parser<CharSequence> wordParser = Parser.literal("word");
         assertEquals("word", wordParser.parse("word").value);
-        assertEquals("", wordParser.parse("word").c);
-        assertEquals("s", wordParser.parse("words").c);
+        assertEquals("", wordParser.parse("word").rest);
+        assertEquals("s", wordParser.parse("words").rest);
         assertThrows(
             ParseException.class,
             () -> wordParser.parse("wor")

@@ -143,7 +143,7 @@ public interface Parser<V> {
     default <U> Parser<U> apply(Parser<Function<V, U>> other) {
         return c -> {
             Result<Function<V, U>> result = other.parse(c);
-            return map(result.value).parse(result.c);
+            return map(result.value).parse(result.rest);
         };
     }
 }
