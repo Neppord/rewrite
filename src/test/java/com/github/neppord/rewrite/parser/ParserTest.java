@@ -119,6 +119,8 @@ class ParserTest {
             "lastname", "Ytterbrink"
             );
         assertEquals(expected, name.parse("Samuel Ytterbrink").value);
+        // handle whitespace
+        assertEquals(expected, name.parse("Samuel  Ytterbrink").value);
     }
 
     @Test

@@ -8,8 +8,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonMap;
+import static java.util.Collections.*;
 
 public interface Parser<V> {
     Parser<CharSequence> whitespace = regexp("\\s+");
@@ -32,11 +31,13 @@ public interface Parser<V> {
 
     Parser<Parser<Map<String,String>>> readLiteral =
         anything.map(s -> literal(s).map(s2 -> emptyMap()));
+    Parser<Parser<Map<String,String>>> readWhitespace =
+        whitespace.map(s -> whitespace.map(w -> emptyMap()));
 
     Parser<Parser<Map<String, String>>> readTemplate =
         many(
             p1 -> p2 -> p2.apply(p1.map(Parser::mergeMaps)),
-            readVariable.or(readLiteral)
+            readWhitespace.or(readVariable).or(readLiteral)
         );
 
     static Function<Map<String, String>, Map<String, String>> mergeMaps(Map<String, String> m1) {
