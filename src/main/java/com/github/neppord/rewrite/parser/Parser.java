@@ -1,7 +1,6 @@
 package com.github.neppord.rewrite.parser;
 
 
-import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -9,7 +8,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonMap;
 
 public interface Parser<V> {
     Parser<CharSequence> whitespace = regexp("\\s+");
