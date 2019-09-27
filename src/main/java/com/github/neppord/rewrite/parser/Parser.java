@@ -2,6 +2,7 @@ package com.github.neppord.rewrite.parser;
 
 
 import java.util.EmptyStackException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
@@ -20,13 +21,18 @@ public interface Parser<V> {
         .map(v -> v.subSequence(3, v.length() - 2));
     Parser<CharSequence> anything = regexp(".");
     Parser<Parser<Map<String,String>>> readVariable =
-        variable.map(key -> literal("world").map(value -> singletonMap(key.toString(), value.toString())));
+        variable.map(key -> regexp("\\w+").map(value -> singletonMap(key.toString(), value.toString())));
     Parser<Parser<Map<String,String>>> readLiteral =
         anything.map(s -> literal(s).map(s2 -> emptyMap()));
 
     Parser<Parser<Map<String, String>>> readTemplate =
         many(
-            p1 -> p2 -> p2.apply(p1.map(m1 -> m2 -> m1.isEmpty() ? m2: m1)),
+            p1 -> p2 -> p2.apply(p1.map(m1 -> m2 -> {
+                HashMap<String, String> ret = new HashMap<>();
+                ret.putAll(m1);
+                ret.putAll(m2);
+                return ret;
+            })),
             readVariable.or(readLiteral)
         );
 
