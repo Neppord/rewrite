@@ -17,11 +17,19 @@ public interface Parser<V> {
     Parser<CharSequence> rightParenthesis = regexp("\\)");
     Parser<CharSequence> leftBracket = regexp("\\[");
     Parser<CharSequence> rightBracket = regexp("\\]");
+    Parser<CharSequence> anything = regexp(".");
+
     Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}")
         .map(v -> v.subSequence(3, v.length() - 2));
-    Parser<CharSequence> anything = regexp(".");
+    Parser<CharSequence> variableContent = regexp("\\w+");
+
     Parser<Parser<Map<String,String>>> readVariable =
-        variable.map(key -> regexp("\\w+").map(value -> singletonMap(key.toString(), value.toString())));
+        variable.map(
+            key -> variableContent.map(
+                value -> singletonMap(key.toString(), value.toString())
+            )
+        );
+
     Parser<Parser<Map<String,String>>> readLiteral =
         anything.map(s -> literal(s).map(s2 -> emptyMap()));
 
