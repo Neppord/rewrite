@@ -12,12 +12,12 @@ import static java.util.Collections.*;
 
 public interface Parser<V> {
     Parser<CharSequence> whitespace = regexp("\\s+");
-    Parser<CharSequence> leftParenthesis = regexp("\\(");
-    Parser<CharSequence> rightParenthesis = regexp("\\)");
+    Parser<CharSequence> leftParenthesis = literal("(");
+    Parser<CharSequence> rightParenthesis = literal(")");
     Parser<CharSequence> leftSquigglyParenthesis = literal("{");
     Parser<CharSequence> rightSquigglyParenthesis = literal("}");
-    Parser<CharSequence> leftBracket = regexp("\\[");
-    Parser<CharSequence> rightBracket = regexp("\\]");
+    Parser<CharSequence> leftBracket = literal("[");
+    Parser<CharSequence> rightBracket = literal("]");
     Parser<CharSequence> doubleQuote = literal("\"");
 
     Parser<CharSequence> anything = regexp(".");
