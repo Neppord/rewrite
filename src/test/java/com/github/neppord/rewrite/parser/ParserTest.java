@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.function.Function;
 
-import static com.github.neppord.rewrite.parser.Parser.regexp;
-import static com.github.neppord.rewrite.parser.Parser.variable;
+import static com.github.neppord.rewrite.parser.Parser.*;
 import static java.util.Collections.EMPTY_MAP;
 import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -98,6 +97,19 @@ class ParserTest {
                 )
             );
         assertEquals(3 , subtraction.parse("4-1").value);
+    }
+
+    @Test
+    void surroundWith() throws ParseException {
+        Function<CharSequence, Function<CharSequence, Function<CharSequence, CharSequence>>>  concat=
+            s1 -> s2 -> s3 -> s1.toString() + s2 + s3;
+        Parser<CharSequence> parser =
+            Parser.literal("a").surroundWith(
+                concat,
+                leftSquigglyParenthesis,
+                rightSquigglyParenthesis
+            );
+        assertEquals("{a}", parser.parse("{a}").value);
     }
 
     @Test

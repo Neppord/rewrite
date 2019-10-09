@@ -169,4 +169,8 @@ public interface Parser<V> {
             return map(result.value).parse(result.rest);
         };
     }
+
+    default <L , R, U> Parser<U> surroundWith(Function<L, Function<V, Function<R, U>>> concat, Parser<L> left, Parser<R> right) {
+        return right.apply(apply(left.map(concat)));
+    }
 }
