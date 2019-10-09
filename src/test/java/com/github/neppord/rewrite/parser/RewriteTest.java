@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static com.github.neppord.rewrite.parser.Rewrite.rewrite;
 import static com.github.neppord.rewrite.parser.Rewrite.variableContent;
 import static java.util.Collections.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,14 +57,21 @@ class RewriteTest {
     }
 
     @Test
-    public void rewrite() throws ParseException {
-        String input = "{\"seed\": \"as23}sdkdf\"}";
-        String expected = "{\"seed\": \"sable1234\" }";
-        Parser<CharSequence> transformation = Rewrite.rewrite(
-            "{\"seed\": ${{seed}} }",
-            expected
-            );
-        assertEquals(expected, transformation.parse(input).value);
+    public void testRewrite() throws ParseException {
+        assertEquals(
+            "{\"seed\": \"sable1234\"}",
+            rewrite(
+                "{\"seed\": ${{seed}}}",
+                "{\"seed\": \"sable1234\"}"
+            ).parse("{\"seed\": \"as23}sdkdf\"}").value
+        );
+        assertEquals(
+            "second first",
+            rewrite(
+                "first ${{second}}",
+                "${{second}} first"
+            ).parse("first second").value
+        );
         // assertEquals(" " + expected, transformation.parse(" " + input).value);
     }
 }

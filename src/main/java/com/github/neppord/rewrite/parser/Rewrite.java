@@ -56,8 +56,17 @@ public interface Rewrite {
         }
     }, "");
 
-    static Parser<CharSequence> rewrite(CharSequence readTemplate, CharSequence writeTemplate) {
-        return c -> new Result<>(writeTemplate, "");
+    static Parser<String> rewrite(CharSequence readTemplate, CharSequence writeTemplate) {
+        final Parser<Map<String, String>> readParser;
+        try {
+            readParser = Rewrite.readTemplate.parse(readTemplate).value;
+        } catch (ParseException e) {
+            throw new RuntimeException("Failed to parse read template", e);
+        }
+        return c -> {
+            Map<String, String> variables = readParser.parse(c).value;
+            return Rewrite.makeWriteTemplate(variables).parse(writeTemplate);
+        };
     }
 
     static Parser<String> makeWriteTemplate(Map<String, String> variables) {
