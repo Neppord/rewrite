@@ -22,6 +22,7 @@ class RewriteTest {
     @Test
     public void variableContent() throws ParseException {
         assertEquals("{}", variableContent.parse("{}").value);
+        assertEquals("{}{}", variableContent.parse("{}{}").value);
         assertEquals("[]", variableContent.parse("[]").value);
         assertEquals("()", variableContent.parse("()").value);
         assertEquals("[\"hello world\"]", variableContent.parse("[\"hello world\"]").value);

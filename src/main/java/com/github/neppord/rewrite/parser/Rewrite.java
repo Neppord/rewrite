@@ -4,33 +4,35 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static com.github.neppord.rewrite.parser.Functional.fix;
+import static com.github.neppord.rewrite.parser.Parser.many;
+import static com.github.neppord.rewrite.parser.Parser.some;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 
 public interface Rewrite {
-    Parser<CharSequence> variableContent = fix(
+    Parser<CharSequence> variableContent = some(Functional::concat2,fix(
          vc ->
              Literals.rightSquigglyParenthesis.apply(
-                 Parser.laizy(vc).apply(
+                 Parser.laizy(vc).or(Literals.nothing).apply(
                     Literals.leftSquigglyParenthesis.map(Functional::concat3)
                  )
              ).or(
                  Literals.rightBracket.apply(
-                     Parser.laizy(vc).apply(
+                     Parser.laizy(vc).or(Literals.nothing).apply(
                          Literals.leftBracket.map(Functional::concat3)
                      )
                  )
              ).or(
                  Literals.rightParenthesis.apply(
-                     Parser.laizy(vc).apply(
+                     Parser.laizy(vc).or(Literals.nothing).apply(
                          Literals.leftParenthesis.map(Functional::concat3)
                      )
                  )
              )
                  .or(Literals.word)
                  .or(Literals.stringLiteral)
-                 .or(Literals.nothing)
-    );
+    ), "");
+
     Parser<Parser<Map<String,String>>> readVariable =
         Literals.variable.map(
             key -> variableContent.map(
@@ -42,7 +44,7 @@ public interface Rewrite {
     Parser<Parser<Map<String,String>>> readWhitespace =
         Literals.whitespace.map(s -> Literals.whitespace.map(w -> emptyMap()));
     Parser<Parser<Map<String, String>>> readTemplate =
-        Parser.many(
+        many(
             p1 -> p2 -> p2.apply(p1.map(Parser::mergeMaps)),
             readWhitespace.or(readVariable).or(readLiteral)
         );
