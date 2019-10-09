@@ -25,6 +25,8 @@ class ParserTest {
     public void parenthesis() throws ParseException {
         assertEquals("(", Parser.leftParenthesis.parse("(").value);
         assertEquals(")", Parser.rightParenthesis.parse(")").value);
+        assertEquals("{", Parser.leftSquigglyParenthesis.parse("{").value);
+        assertEquals("}", Parser.rightSquigglyParenthesis.parse("}").value);
         assertEquals("[", Parser.leftBracket.parse("[").value);
         assertEquals("]", Parser.rightBracket.parse("]").value);
     }

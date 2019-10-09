@@ -14,6 +14,8 @@ public interface Parser<V> {
     Parser<CharSequence> whitespace = regexp("\\s+");
     Parser<CharSequence> leftParenthesis = regexp("\\(");
     Parser<CharSequence> rightParenthesis = regexp("\\)");
+    Parser<CharSequence> leftSquigglyParenthesis = literal("{");
+    Parser<CharSequence> rightSquigglyParenthesis = literal("}");
     Parser<CharSequence> leftBracket = regexp("\\[");
     Parser<CharSequence> rightBracket = regexp("\\]");
     Parser<CharSequence> doubleQuote = literal("\"");
