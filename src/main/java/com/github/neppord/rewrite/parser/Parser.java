@@ -16,11 +16,26 @@ public interface Parser<V> {
     Parser<CharSequence> rightParenthesis = regexp("\\)");
     Parser<CharSequence> leftBracket = regexp("\\[");
     Parser<CharSequence> rightBracket = regexp("\\]");
+    Parser<CharSequence> doubleQuote = literal("\"");
+
     Parser<CharSequence> anything = regexp(".");
+
+    Parser<CharSequence> stringLiteral=
+        doubleQuote.map(CharSequence::toString).apply(
+            some(
+                s1 -> s2 ->  s1 + s2,
+                literal("\\\"")
+                    .or(regexp("[^\"]"))
+                    .map(CharSequence::toString),
+                ""
+            ).apply(doubleQuote.map(s1 -> s2 -> s3 ->s1 + s2 + s3))
+        );
 
     Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}")
         .map(v -> v.subSequence(3, v.length() - 2));
-    Parser<CharSequence> variableContent = regexp("\\w+");
+
+    Parser<CharSequence> variableContent =
+        stringLiteral.or(regexp("\\w+"));
 
     Parser<Parser<Map<String,String>>> readVariable =
         variable.map(
@@ -38,16 +53,6 @@ public interface Parser<V> {
         many(
             p1 -> p2 -> p2.apply(p1.map(Parser::mergeMaps)),
             readWhitespace.or(readVariable).or(readLiteral)
-        );
-    Parser<CharSequence> stringLiteral =
-        literal("\"").map(CharSequence::toString).apply(
-            some(
-                s1 -> s2 ->  s1 + s2,
-                literal("\\\"")
-                    .or(regexp("[^\"]"))
-                    .map(CharSequence::toString),
-                ""
-            ).apply(literal("\"").map(s1 -> s2 -> s3 ->s1 + s2 + s3))
         );
 
     static Function<Map<String, String>, Map<String, String>> mergeMaps(Map<String, String> m1) {
