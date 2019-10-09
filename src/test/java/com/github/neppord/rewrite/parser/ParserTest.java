@@ -127,6 +127,14 @@ class ParserTest {
     }
 
     @Test
+    void variableContent() throws ParseException {
+        assertEquals("{}", variableContent.parse("{}").value);
+        assertEquals("[]", variableContent.parse("[]").value);
+        assertEquals("()", variableContent.parse("()").value);
+        assertEquals("[\"hello world\"]", variableContent.parse("[\"hello world\"]").value);
+    }
+
+    @Test
     void readTemplate() throws ParseException {
         final Parser<Map<String, String>> hello_world = Parser.readTemplate.parse("hello world").value;
         assertEquals(EMPTY_MAP, hello_world.parse("hello world").value);
@@ -151,19 +159,6 @@ class ParserTest {
             singletonMap("seed", "\"as23sdkdf\""),
             jsonSeed.parse(jsonWithString).value
         );
-
-        String jsonWithObject = "{\"seed\": {}}";
-        assertEquals(
-            singletonMap("seed", "{}"),
-            jsonSeed.parse(jsonWithObject).value
-        );
-
-        /* TODO:
-        String jsonWithSquigglyInString = "{\"seed\": \"as23}sdkdf\"}";
-        assertEquals(
-            singletonMap("seed", "\"as23}sdkdf\""),
-            jsonSeed.parse(jsonWithSquigglyInString).value
-        );*/
     }
 
     @Test

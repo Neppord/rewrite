@@ -4,6 +4,7 @@ package com.github.neppord.rewrite.parser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,8 +21,10 @@ public interface Parser<V> {
     Parser<CharSequence> leftBracket = literal("[");
     Parser<CharSequence> rightBracket = literal("]");
     Parser<CharSequence> doubleQuote = literal("\"");
+    Parser<CharSequence> word = regexp("\\w+");
 
     Parser<CharSequence> anything = regexp(".");
+    Parser<CharSequence> nothing = literal("");
 
     Parser<CharSequence> stringLiteral=
         doubleQuote.map(CharSequence::toString).apply(
@@ -38,8 +41,39 @@ public interface Parser<V> {
         .map(v -> v.subSequence(3, v.length() - 2));
 
     Parser<CharSequence> variableContent = fix(
-         vc -> literal("{}").or(stringLiteral).or(regexp("\\w+"))
+         vc ->
+             rightSquigglyParenthesis.apply(
+                 laizy(vc).apply(
+                    leftSquigglyParenthesis.map(Parser::concat3)
+                 )
+             ).or(
+                 rightBracket.apply(
+                     laizy(vc).apply(
+                         leftBracket.map(Parser::concat3)
+                     )
+                 )
+             ).or(
+                 rightParenthesis.apply(
+                     laizy(vc).apply(
+                         leftParenthesis.map(Parser::concat3)
+                     )
+                 )
+             )
+                 .or(word)
+                 .or(stringLiteral)
+                 .or(nothing)
     );
+
+    static <V> Parser<V> laizy(Supplier<Parser<V>> supplier) {
+        return c -> supplier.get().parse(c);
+    }
+
+    static Function<CharSequence, Function<CharSequence, CharSequence>> concat3(CharSequence first) {
+        return second -> third -> first.toString() + second + third;
+    }
+    static Function<CharSequence, CharSequence> concat2(CharSequence first) {
+        return second -> first.toString() + second;
+    }
 
     Parser<Parser<Map<String,String>>> readVariable =
         variable.map(
