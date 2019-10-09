@@ -30,6 +30,11 @@ class ParserTest {
     }
 
     @Test
+    public void stringLiteral() throws ParseException {
+        assertEquals("\"\"", Parser.stringLiteral.parse("\"\"").value);
+    }
+
+    @Test
     public void literal() throws ParseException {
         final Parser<CharSequence> wordParser = Parser.literal("word");
         assertEquals("word", wordParser.parse("word").value);

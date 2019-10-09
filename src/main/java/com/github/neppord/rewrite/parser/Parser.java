@@ -39,6 +39,7 @@ public interface Parser<V> {
             p1 -> p2 -> p2.apply(p1.map(Parser::mergeMaps)),
             readWhitespace.or(readVariable).or(readLiteral)
         );
+    Parser<CharSequence> stringLiteral = literal("\"\"");
 
     static Function<Map<String, String>, Map<String, String>> mergeMaps(Map<String, String> m1) {
         return m2 -> {
