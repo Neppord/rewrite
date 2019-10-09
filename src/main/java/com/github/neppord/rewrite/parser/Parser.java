@@ -39,7 +39,16 @@ public interface Parser<V> {
             p1 -> p2 -> p2.apply(p1.map(Parser::mergeMaps)),
             readWhitespace.or(readVariable).or(readLiteral)
         );
-    Parser<CharSequence> stringLiteral = literal("\"\"");
+    Parser<CharSequence> stringLiteral =
+        literal("\"").map(CharSequence::toString).apply(
+            some(
+                s1 -> s2 ->  s1 + s2,
+                literal("\\\"")
+                    .or(regexp("[^\"]"))
+                    .map(CharSequence::toString),
+                ""
+            ).apply(literal("\"").map(s1 -> s2 -> s3 ->s1 + s2 + s3))
+        );
 
     static Function<Map<String, String>, Map<String, String>> mergeMaps(Map<String, String> m1) {
         return m2 -> {
@@ -48,6 +57,10 @@ public interface Parser<V> {
             ret.putAll(m2);
             return ret;
         };
+    }
+
+    static <U> Parser<U> some(Function<U, Function<U, U>> f, Parser<U> parser, U inNone) {
+        return many(f, parser).or(value(inNone));
     }
 
     static <U> Parser<U> many(Function<U, Function<U, U>> f, Parser<U> parser) {

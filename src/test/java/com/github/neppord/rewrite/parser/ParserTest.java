@@ -32,6 +32,8 @@ class ParserTest {
     @Test
     public void stringLiteral() throws ParseException {
         assertEquals("\"\"", Parser.stringLiteral.parse("\"\"").value);
+        assertEquals("\"a\"", Parser.stringLiteral.parse("\"a\"").value);
+        assertEquals("\"\\\"\"", Parser.stringLiteral.parse("\"\\\"\"").value);
     }
 
     @Test
