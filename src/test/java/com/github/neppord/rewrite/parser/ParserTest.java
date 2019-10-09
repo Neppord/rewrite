@@ -121,6 +121,21 @@ class ParserTest {
         assertEquals(expected, name.parse("Samuel Ytterbrink").value);
         // handle whitespace
         assertEquals(expected, name.parse("Samuel  Ytterbrink").value);
+
+        final Parser<Map<String, String>> jsonSeed =
+            Parser.readTemplate.parse("{\"seed\": ${{seed}} }").value;
+
+        /* TODO:
+        String jsonWithString = "{\"seed\": \"as23sdkdf\"}";
+        assertEquals(
+            singletonMap("seed", "\"as23sdkdf\""),
+            jsonSeed.parse(jsonWithString).value
+        );
+        String jsonWithSquigglyInString = "{\"seed\": \"as23}sdkdf\"}";
+        assertEquals(
+            singletonMap("seed", "\"as23}sdkdf\""),
+            jsonSeed.parse(jsonWithSquigglyInString).value
+        );*/
     }
 
     @Test
