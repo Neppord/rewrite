@@ -6,8 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static com.github.neppord.rewrite.parser.Parser.*;
-import static java.util.Collections.EMPTY_MAP;
-import static java.util.Collections.singletonMap;
+import static java.util.Collections.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -119,7 +118,7 @@ class ParserTest {
 
     @Test
     void writeTemplate() throws ParseException {
-        assertEquals("hello world", Parser.writeTemplate.parse("hello world").value.apply(EMPTY_MAP));
+        assertEquals("hello world", Parser.writeTemplate.parse("hello world").value.apply(emptyMap()));
         assertEquals(
             "hello world",
             Parser.writeTemplate.parse("hello ${{subject}}").value.apply(singletonMap("subject", "world"))
