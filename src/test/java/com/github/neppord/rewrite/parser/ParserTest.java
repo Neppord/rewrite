@@ -140,6 +140,12 @@ class ParserTest {
             jsonSeed.parse(jsonWithString).value
         );
 
+        String jsonWithObject = "{\"seed\": {}}";
+        assertEquals(
+            singletonMap("seed", "{}"),
+            jsonSeed.parse(jsonWithObject).value
+        );
+
         /* TODO:
         String jsonWithSquigglyInString = "{\"seed\": \"as23}sdkdf\"}";
         assertEquals(

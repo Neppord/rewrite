@@ -8,6 +8,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.github.neppord.rewrite.parser.Functional.fix;
 import static java.util.Collections.*;
 
 public interface Parser<V> {
@@ -36,8 +37,9 @@ public interface Parser<V> {
     Parser<CharSequence> variable = regexp("\\$\\{\\{[A-Za-z_]+}}")
         .map(v -> v.subSequence(3, v.length() - 2));
 
-    Parser<CharSequence> variableContent =
-        stringLiteral.or(regexp("\\w+"));
+    Parser<CharSequence> variableContent = fix(
+         vc -> literal("{}").or(stringLiteral).or(regexp("\\w+"))
+    );
 
     Parser<Parser<Map<String,String>>> readVariable =
         variable.map(
