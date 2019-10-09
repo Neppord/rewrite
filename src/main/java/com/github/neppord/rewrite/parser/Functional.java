@@ -8,4 +8,12 @@ public interface Functional {
         Supplier<V> t = () -> fix(f);
         return f.apply(t);
     }
+
+    static Function<CharSequence, Function<CharSequence, CharSequence>> concat3(CharSequence first) {
+        return second -> third -> first.toString() + second + third;
+    }
+
+    static Function<CharSequence, CharSequence> concat2(CharSequence first) {
+        return second -> first.toString() + second;
+    }
 }
