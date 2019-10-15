@@ -31,6 +31,9 @@ class RewriteTest {
 
     @Test
     public void readTemplate() throws ParseException {
+        final Parser<Map<String, String>> empty = Rewrite.readTemplate.parse("").value;
+        assertEquals(emptyMap(), empty.parse("").value);
+
         final Parser<Map<String, String>> hello_world = Rewrite.readTemplate.parse("hello world").value;
         assertEquals(EMPTY_MAP, hello_world.parse("hello world").value);
 
@@ -59,12 +62,18 @@ class RewriteTest {
     @Test
     public void testRewrite() throws ParseException {
         assertEquals(
+            "",
+            rewrite("", "").parse("").value
+        );
+
+        assertEquals(
             "{\"seed\": \"sable1234\"}",
             rewrite(
                 "{\"seed\": ${{seed}}}",
                 "{\"seed\": \"sable1234\"}"
             ).parse("{\"seed\": \"as23}sdkdf\"}").value
         );
+
         assertEquals(
             "second first",
             rewrite(

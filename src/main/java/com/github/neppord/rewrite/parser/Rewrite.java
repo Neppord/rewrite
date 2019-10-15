@@ -47,6 +47,10 @@ public interface Rewrite {
         many(
             p1 -> p2 -> p2.apply(p1.map(Parser::mergeMaps)),
             readWhitespace.or(readVariable).or(readLiteral)
+        ).or(
+            Literals.nothing.map(
+                empty1 -> Literals.nothing.map(empty2 -> emptyMap())
+            )
         );
     Parser<Function<Map<String, String>, String>> writeTemplate = c -> new Result<>(m -> {
         try {
@@ -61,7 +65,10 @@ public interface Rewrite {
         try {
             readParser = Rewrite.readTemplate.parse(readTemplate).value;
         } catch (ParseException e) {
-            throw new RuntimeException("Failed to parse read template", e);
+            throw new RuntimeException(
+                "Failed to parse read template:\n\t" + e.message,
+                e
+            );
         }
         return c -> {
             Map<String, String> variables = readParser.parse(c).value;
@@ -82,7 +89,11 @@ public interface Rewrite {
                             .apply(Parser.value(s -> s2 -> s + s2)));
                 return concat.parse(c);
             } catch (ParseException e) {
-                return variableOrAnything.parse(c);
+                try {
+                    return variableOrAnything.parse(c);
+                } catch (ParseException ex) {
+                    return Literals.nothing.parse(c).map(CharSequence::toString);
+                }
             }
         };
     }
